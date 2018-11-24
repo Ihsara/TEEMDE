@@ -1,5 +1,9 @@
-import requests
+
 from flask import jsonify, request
+
+from app import app
+
+import requests
 
 
 @app.route("/")
@@ -17,11 +21,9 @@ def send_message(uuid):
 
 @app.route("/chat/")
 def chat():
+    resp = jsonify({})
     res = requests.post('http://localhost:5000/chat/send_message/1234', json={"author":"lalala", "data":"This is chat_msg_1"})
     if res.ok:
-        return jsonify(res.json())
+        resp= jsonify(res.json())
 
-
-
-if __name__ == '__main__':
-    app.run(debug=True)
+    return resp
