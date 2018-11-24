@@ -11,7 +11,26 @@ def hello():
 
 @app.route("/chat/get_all_messages", methods=["GET", "POST"])
 def get_all_messages():
-    return jsonify({"data": "get_all_messages"})
+    return jsonify([
+        {
+            "author": "customer",
+            "data": {
+                "text": "Hello! I have a great problem!"
+            }
+        },
+        {
+            "author": "support",
+            "data": {
+                "text": "I can help you! What problem do you have?"
+            }
+        },
+        {
+            "author": "customer",
+            "data": {
+                "text": "Nothing works!"
+            }
+        }
+    ])
 
 @app.route("/user/create", methods=["POST"])
 def create_user():
@@ -26,8 +45,7 @@ def create_user():
 def send_message():
     response = request.get_json()
     status = {"status": "something is wrong!"}
-#     response.headers['Access-Control-Allow-Origin'] = '*'
-#     response.headers['Access-Control-Allow-Headers'] = '*'
+
     if response['author'] != '':
         u = User.query.filter_by(username=response['author']).first_or_404()
         message = TextBlob(response['data']['text'])
