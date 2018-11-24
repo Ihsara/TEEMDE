@@ -4,6 +4,10 @@
 !.vscode/launch.json
 !.vscode/extensions.json
 
+venv
+app.db
+microblog.log*
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
