@@ -16,12 +16,23 @@ class User(db.Model):
 
 
 
-class Emotion(db.Model):
+class Video(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    client_id = db.Column(db.Integer, db.ForeignKey('user.id'),
-        nullable=False)
-
+    client_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    angriness_level = db.Column(db.Float(precision=8))
+    happiness_level = db.Column(db.Float(precision=8))
+
+    def __repr__(self):
+        return 'At {time}, angriness level was {angry}, happy level was {happy}.'.format(time=self.timestamp,
+                                                                                            angry=self.angriness_level,
+                                                                                            happy= self.happiness_level)
+
+    def info(self):
+        data = {}
+        data['happiness'] = self.happiness_level
+        data['angriness'] = self.angriness_level
+        return data
 
 class Message(db.Model):
     id = db.Column(db.Integer, primary_key=True)

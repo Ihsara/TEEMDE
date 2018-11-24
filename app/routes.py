@@ -3,7 +3,7 @@ from flask import jsonify, request
 
 from app import app, db
 from textblob import TextBlob
-from app.models import User, Message
+from app.models import User, Message, Video
 
 @app.route("/")
 def hello():
@@ -82,3 +82,30 @@ def chat_get_one_user(uuid):
         m[str(message.id)] = m_info
         m_info = {}
     return jsonify(m)
+
+@app.route("/video/send_feelings", methods=["POST"])
+def video_add_feelings():
+    response = request.get_json()
+    status = {"status": "something is wrong!"}
+
+    if response['happiness'] != '' and response['angry'] != '':
+        u = User.query.filter_by(username='customer').first_or_404()
+
+        v = Video(client_id=u.id,happiness_level=response['happiness'],
+                    angriness_level=response['angry'])
+
+        db.session.add(v)
+        db.session.commit()
+        status['status'] = "OK"
+
+    return jsonify(status)
+
+@app.route("/video/get_feelings", methods=["GET"])
+def video_get_feelings():
+    feelings = Video.query.all()
+    cooperate_feelings = []
+    for each_time in feelings:
+        cooperate_feelings.append(each_time.info())
+
+    return jsonify(cooperate_feelings)
+
