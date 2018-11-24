@@ -13,6 +13,15 @@ def hello():
 def get_all_messages():
     return jsonify({"data": "get_all_messages"})
 
+@app.route("/user/create", methods=["POST"])
+def create_user():
+    data = request.get_json()
+    u = User(username = data["username"])
+    db.session.add(u)
+    db.session.commit()
+
+    return jsonify({'status': 'User created!'})
+
 @app.route("/chat/send_message", methods=["POST"])
 def send_message():
     response = request.get_json()
@@ -32,16 +41,36 @@ def send_message():
 
     return jsonify(status)
 
-@app.route("/chat/")
+@app.route("/chat/", methods=["GET"])
 def chat():
+    '''
+    Get all messages from all users. For now, hardcoding lalala
+    '''
     m = {}
-    res = requests.post('http://localhost:5000/chat/send_message', json={"author":"lalala", "data":{"text": "Textblob is amazingly simple to use. What great fun!"}})
-    res = requests.post('http://localhost:5000/chat/send_message', json={"author":"lalala", "data":{"text": "What an amazingly enjoyable experience!"}})
-    u = User.query.filter_by(username='lalala').first_or_404()
-    messages  = Message.query.filter_by(client_id=u.id).all()
+    m_info={}
+    # res = requests.post('http://localhost:5000/chat/send_message', json={"author":"lalala", "data":{"text": "Textblob is amazingly simple to use. What great fun!"}})
+    # res = requests.post('http://localhost:5000/chat/send_message', json={"author":"lalala", "data":{"text": "What an amazingly enjoyable experience!"}})
+    messages  = Message.query.all()
     for message in messages:
-        m[str(message.id)] = message.info()
+        u = User.query.filter_by(id= message.client_id).first_or_404()
+        m_info['data'] = message.info()
+        m_info['author'] = u.username
+        m_info['suggestions'] = 'None as of now!!'
+        m[str(message.id)] = m_info
     return jsonify(m)
 
-# curl -X POST -H "Content-Type: application/json" -d "{"author":"lalala", "data":{"text": "What an amazingly enjoyable experience!"}}" http://localhost:5000/chat/send_message
-# curl -X POST -H "Content-Type: application/json" -d "{\"author\":\"lalala\", \"data\":{\"text\": \"What an amazingly enjoyable experience!\"}}" http://localhost:5000/chat/send_message
+@app.route("/chat/user/<int:uuid>", methods=["GET"])
+def chat_get_one_user(uuid):
+    '''
+    Get all messages from one user.
+    '''
+    m = {}
+    m_info = {}
+    u = User.query.filter_by(id=uuid).first_or_404()
+    messages  = Message.query.filter_by(client_id=u.id).all()
+    for message in messages:
+        m_info['data'] = message.info()
+        m_info['author'] = u.username
+        m_info['suggestions'] = 'None as of now!!'
+        m[str(message.id)] = m_info
+    return jsonify(m)

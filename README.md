@@ -1,5 +1,6 @@
-"# TEEMDE"
+# TEEMDE
 
+Text sentiment detection
 
 This project uses [pipenv](https://github.com/Ihsara/TEEMDE.git)
 ### To run this project env
@@ -35,7 +36,7 @@ flask db upgrade
 
 ### Message:
 
-#### Test /chat/send_message/
+#### /chat/send_message/
 Linux:
 ```
 curl -X POST -H "Content-Type: application/json" -d "{"author":"lalala", "data":{"text": "What an amazingly enjoyable experience!"}}" http://localhost:5000/chat/send_message
@@ -44,4 +45,11 @@ curl -X POST -H "Content-Type: application/json" -d "{"author":"lalala", "data":
 Windows:
 ```
 curl -X POST -H "Content-Type: application/json" -d "{\"author\":\"lalala\", \"data\":{\"text\": \"What an amazingly enjoyable experience!\"}}" http://localhost:5000/chat/send_message
+```
+
+#### /chat/user/<int:uuid>
+
+#### /create_user/
+```
+curl -X POST -H "Content-Type: application/json" -d "{\"username\":\"service\", \"age\":1500, \"gender\": \"apache\"}" http://localhost:5000/user/create
 ```

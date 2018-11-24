@@ -35,11 +35,11 @@ class Message(db.Model):
 
     def info(self):
         data = {}
-        data["client_id"] = self.client_id
-        data["id"] = self.id
+        sentiment = {}
         data["text"] = self.text
-        data["polarity"] = self.polarity
-        data["subjectivity"] = self.subjectivity
+        sentiment["polarity"] = self.polarity
+        sentiment["subjectivity"] = self.subjectivity
+        data['data'] = sentiment
         return data
 
 
