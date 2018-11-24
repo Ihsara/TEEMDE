@@ -1,9 +1,8 @@
-
+import requests
 from flask import jsonify, request
 
 from app import app
 
-import requests
 
 
 @app.route("/")
@@ -14,10 +13,13 @@ def hello():
 def get_all_messages():
     return jsonify({"data": "get_all_messages"})
 
-@app.route("/chat/send_message/", methods=["POST"])
-def send_message(uuid):
-    print(uuid)
-    return jsonify(request.get_json())
+@app.route("/chat/send_message", methods=["POST"])
+def send_message():
+    print('Message sent:', request.get_json())
+    response = jsonify(request.get_json())
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Headers'] = '*'
+    return response
 
 @app.route("/chat/")
 def chat():
