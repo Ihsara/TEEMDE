@@ -9,6 +9,7 @@ requests = "*"
 flask-sqlalchemy = "*"
 flask-migrate = "*"
 textblob = "*"
+flask-cors = "*"
 
 [dev-packages]
 pylint = "*"
