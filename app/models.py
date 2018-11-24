@@ -39,7 +39,7 @@ class Message(db.Model):
         data["text"] = self.text
         sentiment["polarity"] = self.polarity
         sentiment["subjectivity"] = self.subjectivity
-        data['data'] = sentiment
+        data['sentiment'] = sentiment
         return data
 
 

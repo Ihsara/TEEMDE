@@ -15,11 +15,11 @@ def get_all_messages():
     m_info={}
     messages  = Message.query.all()
     for message in messages:
-        u = User.query.filter_by(id= message.client_id).first_or_404()
         m_info['data'] = message.info()
-        m_info['author'] = u.username
-        m_info['suggestions'] = 'None as of now!!'
+        m_info['author'] = User.query.filter_by(id = message.client_id).first_or_404().username
+        m_info['suggestions'] = ''
         m.append(m_info)
+        m_info = {}
     return jsonify(m)
 
 @app.route("/user/create", methods=["POST"])
@@ -63,6 +63,7 @@ def chat():
         m_info['author'] = u.username
         m_info['suggestions'] = 'None as of now!!'
         m[str(message.id)] = m_info
+        m_info = {}
     return jsonify(m)
 
 @app.route("/chat/user/<int:uuid>", methods=["GET"])
@@ -79,4 +80,5 @@ def chat_get_one_user(uuid):
         m_info['author'] = u.username
         m_info['suggestions'] = 'None as of now!!'
         m[str(message.id)] = m_info
+        m_info = {}
     return jsonify(m)
