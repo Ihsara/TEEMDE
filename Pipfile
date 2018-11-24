@@ -6,6 +6,9 @@ name = "pypi"
 [packages]
 flask = "*"
 requests = "*"
+flask-sqlalchemy = "*"
+flask-migrate = "*"
+textblob = "*"
 
 [dev-packages]
 pylint = "*"
