@@ -39,12 +39,13 @@ flask db upgrade
 #### /chat/send_message/
 Linux:
 ```
-curl -X POST -H "Content-Type: application/json" -d "{"author":"lalala", "data":{"text": "What an amazingly enjoyable experience!"}}" http://localhost:5000/chat/send_message
+curl -X POST -H "Content-Type: application/json" -d "{"author":"customer", "data":{"text": "What an amazingly enjoyable experience!"}}" http://localhost:5000/chat/send_message
 ```
 
 Windows:
 ```
-curl -X POST -H "Content-Type: application/json" -d "{\"author\":\"lalala\", \"data\":{\"text\": \"What an amazingly enjoyable experience!\"}}" http://localhost:5000/chat/send_message
+curl -X POST -H "Content-Type: application/json" -d "{\"author\":\"customer\", \"data\":{\"text\": \"wonderful!!\"}}" http://localhost:5000/chat/send_message
+curl -X POST -H "Content-Type: application/json" -d "{\"author\":\"support\", \"data\":{\"text\": \"As your service!\"}}" http://localhost:5000/chat/send_message
 ```
 
 #### /chat/user/<int:uuid>

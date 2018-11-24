@@ -11,26 +11,16 @@ def hello():
 
 @app.route("/chat/get_all_messages", methods=["GET", "POST"])
 def get_all_messages():
-    return jsonify([
-        {
-            "author": "customer",
-            "data": {
-                "text": "Hello! I have a great problem!"
-            }
-        },
-        {
-            "author": "support",
-            "data": {
-                "text": "I can help you! What problem do you have?"
-            }
-        },
-        {
-            "author": "customer",
-            "data": {
-                "text": "Nothing works!"
-            }
-        }
-    ])
+    m = []
+    m_info={}
+    messages  = Message.query.all()
+    for message in messages:
+        u = User.query.filter_by(id= message.client_id).first_or_404()
+        m_info['data'] = message.info()
+        m_info['author'] = u.username
+        m_info['suggestions'] = 'None as of now!!'
+        m.append(m_info)
+    return jsonify(m)
 
 @app.route("/user/create", methods=["POST"])
 def create_user():
@@ -66,8 +56,6 @@ def chat():
     '''
     m = {}
     m_info={}
-    # res = requests.post('http://localhost:5000/chat/send_message', json={"author":"lalala", "data":{"text": "Textblob is amazingly simple to use. What great fun!"}})
-    # res = requests.post('http://localhost:5000/chat/send_message', json={"author":"lalala", "data":{"text": "What an amazingly enjoyable experience!"}})
     messages  = Message.query.all()
     for message in messages:
         u = User.query.filter_by(id= message.client_id).first_or_404()

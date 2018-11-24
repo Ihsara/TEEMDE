@@ -30,8 +30,8 @@ class Message(db.Model):
 
     timestamp= db.Column(db.DateTime, index=True, default=datetime.utcnow)
     text = db.Column(db.Text)
-    polarity = db.Column(db.Numeric(precision=8, asdecimal=False, decimal_return_scale=None))
-    subjectivity = db.Column(db.Numeric(precision=8, asdecimal=False, decimal_return_scale=None))
+    polarity = db.Column(db.Float( precision = 8))
+    subjectivity = db.Column(db.Float(precision =8))
 
     def info(self):
         data = {}
