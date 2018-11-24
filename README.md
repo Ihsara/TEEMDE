@@ -11,21 +11,21 @@ pipenv shell
 ```
 
 ### Run server:
-##### linux:
-```sh
+#### Linux:
+```shell
 FLASK_APP=teemde.py
 FLASS_ENV=development
 flask run
 ```
-##### windows:
-```sh
+#### Windows:
+```shell
 set FLASK_APP=teemde.py
 set FLASK_ENV=development
 flask run
 ```
 
 ### Init database:
-```
+```shell
 flask db init
 flask db migrate
 flask db upgrade
@@ -33,4 +33,15 @@ flask db upgrade
 
 ### API endpoints:
 
-####Message:
+### Message:
+
+#### Test /chat/send_message/
+Linux:
+```
+curl -X POST -H "Content-Type: application/json" -d "{"author":"lalala", "data":{"text": "What an amazingly enjoyable experience!"}}" http://localhost:5000/chat/send_message
+```
+
+Windows:
+```
+curl -X POST -H "Content-Type: application/json" -d "{\"author\":\"lalala\", \"data\":{\"text\": \"What an amazingly enjoyable experience!\"}}" http://localhost:5000/chat/send_message
+```

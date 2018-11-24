@@ -14,6 +14,8 @@ class User(db.Model):
         return '<User {}>'.format(self.username)
 
 
+
+
 class Emotion(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     client_id = db.Column(db.Integer, db.ForeignKey('user.id'),
@@ -27,6 +29,18 @@ class Message(db.Model):
         nullable=False)
 
     timestamp= db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    text = db.Column(db.Text)
+    polarity = db.Column(db.Numeric(precision=8, asdecimal=False, decimal_return_scale=None))
+    subjectivity = db.Column(db.Numeric(precision=8, asdecimal=False, decimal_return_scale=None))
+
+    def info(self):
+        data = {}
+        data["client_id"] = self.client_id
+        data["id"] = self.id
+        data["text"] = self.text
+        data["polarity"] = self.polarity
+        data["subjectivity"] = self.subjectivity
+        return data
 
 
 

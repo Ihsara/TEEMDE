@@ -1,9 +1,9 @@
 import requests
 from flask import jsonify, request
 
-from app import app
-
-
+from app import app, db
+from textblob import TextBlob
+from app.models import User, Message
 
 @app.route("/")
 def hello():
@@ -15,17 +15,33 @@ def get_all_messages():
 
 @app.route("/chat/send_message", methods=["POST"])
 def send_message():
-    print('Message sent:', request.get_json())
-    response = jsonify(request.get_json())
-    response.headers['Access-Control-Allow-Origin'] = '*'
-    response.headers['Access-Control-Allow-Headers'] = '*'
-    return response
+    response = request.get_json()
+    status = {"status": "something is wrong!"}
+#     response.headers['Access-Control-Allow-Origin'] = '*'
+#     response.headers['Access-Control-Allow-Headers'] = '*'
+    if response['author'] != '':
+        u = User.query.filter_by(username=response['author']).first_or_404()
+        message = TextBlob(response['data']['text'])
+        m = Message(client_id=u.id, text= response['data']['text'],
+                    polarity = message.sentiment.polarity,
+                    subjectivity = message.sentiment.subjectivity )
+
+        db.session.add(m)
+        db.session.commit()
+        status['status'] = "OK"
+
+    return jsonify(status)
 
 @app.route("/chat/")
 def chat():
-    resp = jsonify({})
-    res = requests.post('http://localhost:5000/chat/send_message/1234', json={"author":"lalala", "data":"This is chat_msg_1"})
-    if res.ok:
-        resp= jsonify(res.json())
+    m = {}
+    res = requests.post('http://localhost:5000/chat/send_message', json={"author":"lalala", "data":{"text": "Textblob is amazingly simple to use. What great fun!"}})
+    res = requests.post('http://localhost:5000/chat/send_message', json={"author":"lalala", "data":{"text": "What an amazingly enjoyable experience!"}})
+    u = User.query.filter_by(username='lalala').first_or_404()
+    messages  = Message.query.filter_by(client_id=u.id).all()
+    for message in messages:
+        m[str(message.id)] = message.info()
+    return jsonify(m)
 
-    return resp
+# curl -X POST -H "Content-Type: application/json" -d "{"author":"lalala", "data":{"text": "What an amazingly enjoyable experience!"}}" http://localhost:5000/chat/send_message
+# curl -X POST -H "Content-Type: application/json" -d "{\"author\":\"lalala\", \"data\":{\"text\": \"What an amazingly enjoyable experience!\"}}" http://localhost:5000/chat/send_message
