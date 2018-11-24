@@ -85,14 +85,14 @@ def chat_get_one_user(uuid):
 
 @app.route("/video/send_feelings", methods=["POST"])
 def video_add_feelings():
-    response = request.get_json()
+    request_data = request.get_json()
     status = {"status": "something is wrong!"}
 
-    if response['happiness'] != '' and response['angry'] != '':
+    if request_data['happiness'] != '' and request_data['anger'] != '':
         u = User.query.filter_by(username='customer').first_or_404()
-
-        v = Video(client_id=u.id,happiness_level=response['happiness'],
-                    angriness_level=response['angry'])
+        v = Video(client_id=u.id,
+                  happiness_level=request_data['happiness'],
+                  angriness_level=request_data['anger'])
 
         db.session.add(v)
         db.session.commit()
