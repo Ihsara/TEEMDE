@@ -4,6 +4,7 @@ from flask import jsonify, request
 from app import app, db
 from textblob import TextBlob
 from app.models import User, Message, Video
+import numpy as np
 
 @app.route("/")
 def hello():
@@ -100,12 +101,24 @@ def video_add_feelings():
 
     return jsonify(status)
 
+def smooth_timeseries(timeseries):
+    """
+    Output smoothing filter for nicer visualizations.
+    """
+    values = [item['happiness'] for item in timeseries]
+    smoothed = np.convolve(values, np.ones((20,)) / 20, mode='full')
+    for pos, item in enumerate(timeseries):
+        item['happiness'] = smoothed[pos]
+    return timeseries
+
 @app.route("/video/get_feelings", methods=["GET"])
 def video_get_feelings():
     feelings = Video.query.all()
     cooperate_feelings = []
     for each_time in feelings:
         cooperate_feelings.append(each_time.info())
+    # perform smoothing of the feelings timeseries
+    smoothed = smooth_timeseries(cooperate_feelings)
 
-    return jsonify(cooperate_feelings)
+    return jsonify(smoothed)
 
